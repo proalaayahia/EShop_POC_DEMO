@@ -1,0 +1,16 @@
+<main *ngIf="!isOffline">
+  <app-nav-menu></app-nav-menu>
+  <!-- <router-outlet></router-outlet> -->
+</main>
+<div class="container">
+  <div class="offline p-4 bg-warning rounded shadow" *ngIf="isOffline">
+    <p class="lead text-dark" i18n>Try to connect to the internet.</p>
+    <div class="mt-4">
+      <span class="lead" i18n>Try To Refresh</span>&nbsp;
+      <button i18n mat-raised-button (click)="refresh()">
+        Refresh Now
+        <i class="bi bi-refresh text-dark"></i>
+      </button>
+    </div>
+  </div>
+</div>

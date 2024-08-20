@@ -1,0 +1,85 @@
+<div class="container user-select-none">
+  <div class="row d-flex justify-content-center" [style.height]="'90vh'">
+    <div class="col-9 col-lg-5 col-md-6 p-3 form-bg align-self-center rounded form-style">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="example-form p-2">
+        <div class="mb-2" [ngClass]="{'form-loader':this.userName?.pending}">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label i18n>User Name</mat-label>
+            <input matInput formControlName="username" i18n-placeholder placeholder="Enter your name" name="usename">
+            <mat-hint *ngIf="userNameExist()" class="text-danger">{{messages.username.exist}}</mat-hint>
+            <mat-hint *ngIf="userNameRequired()" class="text-danger">{{messages.username.required}}</mat-hint>
+            <mat-hint *ngIf="userNameMinLength()" class="text-danger">{{messages.username.minlength}}
+            </mat-hint>
+            <mat-hint *ngIf="userNameMaxLength()" class="text-danger">{{messages.username.maxlength}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="mb-2 " [ngClass]="{'email-form-loader':this.email?.pending}">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label i18n>Email</mat-label>
+            <input matInput formControlName="email" i18n-placeholder
+              placeholder="Enter you email" name="email">
+            <mat-hint *ngIf="emailExist()" class="text-danger">{{messages.email.exist}}</mat-hint>
+            <mat-hint *ngIf="emailRequired()" class="text-danger">{{messages.email.required}}</mat-hint>
+            <mat-hint *ngIf="email?.errors?.['pattern']" class="text-danger">{{messages.email.pattern}}
+            </mat-hint>
+            <!-- <mat-hint *ngIf="email?.errors?.['email']" class="text-danger">{{messages.email.match}}</mat-hint> -->
+          </mat-form-field>
+        </div>
+        <div class="mb-2">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label i18n>Enter your password</mat-label>
+            <input matInput formControlName="password" [type]="hide ? 'password' : 'text'">
+            <button type="button" mat-icon-button matSuffix (click)="hide = !hide">
+              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-hint *ngIf="passwordRequired()" class="text-danger">{{messages.password.required}}</mat-hint>
+            <mat-hint *ngIf="passwordMinLength()" class="text-danger">{{messages.password.minlength}}
+            </mat-hint>
+            <mat-hint *ngIf="passwordMaxLength()" class="text-danger">{{messages.password.maxlength}}
+            </mat-hint>
+            <mat-hint *ngIf="validPassword()" class="text-danger">{{password?.errors?.['message']}}</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="mb-2">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label i18n>Confirm your password</mat-label>
+            <input matInput formControlName="confirmPassword" [type]="show ? 'password' : 'text'">
+            <button type="button" mat-icon-button matSuffix (click)="show = !show">
+              <mat-icon>{{show ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-hint *ngIf="confirmPasswordRequired()" class="text-danger">
+              {{messages.confirmPassword.required}}
+            </mat-hint>
+            <mat-hint *ngIf="confirmPasswordMatch()" class="text-danger">{{messages.confirmPassword.match}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="mb-2">
+          <mat-checkbox i18n class="example-margin" [style.fontSize]="'15px !important'" formControlName="acceptTerms">
+          <span class="text-secondary">I have read and agree terms and conditions.</span>
+          </mat-checkbox><br />
+          <mat-hint *ngIf="acceptTermsRequired()" class="text-danger mx-2">
+            {{messages.acceptTerms.required}}
+          </mat-hint>
+        </div>
+        <div class="d-flex justify-content-end">
+          <button mat-raised-button class="mb-2" [disabled]="submitDisabledIf()"
+            color="primary" i18n>Submit</button>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="mt-2 mb-2 text-center">
+          <button i18n [style.direction]="'ltr !important'" mat-raised-button color="primary"><i
+              class="bi bi-facebook me-3"></i>Facebook
+          </button>&nbsp;&nbsp;
+          <button i18n [style.direction]="'ltr !important'" mat-raised-button color="warn"><i
+              class="bi bi-google me-3"></i>Google </button>
+          <div class="mt-2">
+            <span class="lead" i18n>Already Have Account?&nbsp;<a routerLink="/login"
+                class="link-primary">SignIn Now</a></span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="col mt-4">
+    <mat-form-field class="w-100" [style.fontSize]="'14px !important'" [style.direction]="'ltr!important'"
+      appearance="outline">
+      <mat-label i18n>CHOOSE ONE CATEGORY</mat-label>
+      <mat-select [style.fontSize]="'18px !important'" [(value)]="this.event" (selectionChange)="filteration()"
+        class="text-center">
+        <mat-option [style.fontSize]="'18px !important'" class="text-center" value="all" i18n *ngIf="isAllOption">ALL PRODUCTS
+        </mat-option>
+        <mat-option [style.fontSize]="'18px !important'" class="text-center" *ngFor="let cate of data$|async"
+          value="{{cate}}">
+          {{cate.toUpperCase()}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
