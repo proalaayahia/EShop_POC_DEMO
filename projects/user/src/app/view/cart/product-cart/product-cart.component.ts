@@ -2,7 +2,7 @@ import { Component, Inject, inject, OnDestroy, OnInit, PLATFORM_ID } from '@angu
 import { NgToastService } from 'ng-angular-popup';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -31,7 +31,7 @@ export class ProductCartComponent implements OnInit, OnDestroy {
   subscribe!: Subscription
   constructor(private toastr: NgToastService,
     private crypt: CryptoService,
-    @Inject(PLATFORM_ID) private platformId: any
+    @Inject(PLATFORM_ID) private platformId: any,@Inject(DOCUMENT) private document: Document
   ) {
     if (this.isBrowser()) {
       if ("cart" in localStorage) {
@@ -39,13 +39,13 @@ export class ProductCartComponent implements OnInit, OnDestroy {
       }
     }
   }
-  isBrowser() {
-    return isPlatformBrowser(this.platformId);
-  }
   ngOnInit(): void {
     if (this.isBrowser()) {
       this.getTotalCart()
     }
+  }
+  isBrowser() {
+    return isPlatformBrowser(this.platformId);
   }
   plus(index: any) {
     if (this.isBrowser()) {
