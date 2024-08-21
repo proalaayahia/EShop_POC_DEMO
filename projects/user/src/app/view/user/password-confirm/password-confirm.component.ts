@@ -6,11 +6,13 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import Validation from '../../../core/validators/confirm.pssw.validator';
 import { ValidatePassword } from '../../../core/validators/validate.password';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-password-confirm',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,
+  imports: [CommonModule, ReactiveFormsModule,MatInputModule,MatButtonModule,
     MatFormFieldModule, MatDividerModule, MatIconModule],
   templateUrl: './password-confirm.component.html',
   styleUrls: ['./password-confirm.component.css']

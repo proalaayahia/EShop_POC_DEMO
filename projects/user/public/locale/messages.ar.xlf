@@ -152,7 +152,7 @@
       </trans-unit>
       <trans-unit id="8432562579042371182" datatype="html">
         <source>Options</source>
-        <target>اختيارات</target>
+        <target>حذف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/user/src/app/view/cart/product-cart/product-cart.component.html</context>
           <context context-type="linenumber">23,24</context>
