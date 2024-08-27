@@ -13,7 +13,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCustomTableComponent } from '../mat-custom-table/mat-custom-table.component';
 import { DialogOverviewExampleDialog } from '../dialogs/dialog-overview-example-dialog';
-import { ProductModel } from '../../models/product.model';
+import { ProductModel } from '../../models/products.model';
 import { ProductService } from '../../services/product.service';
 
 @Component({

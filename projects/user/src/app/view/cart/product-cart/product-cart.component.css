@@ -7,3 +7,7 @@ img
 .example-tooltip-red {
   background: #b71c1c !important;
 }
+/* ::ng-deep .mat-sort-header-position-before .mat-sort-header-arrow {
+  align-items: center;
+  color: #FFF !important;
+} */

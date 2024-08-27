@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
+
+import { MaterialModule } from '../../../Shared/material.module';
 
 @Component({
   selector: 'app-register-confirm',
   standalone:true,
-  imports:[MatIconModule],
+  imports:[MaterialModule],
   templateUrl: './register-confirm.component.html',
   styleUrls: ['./register-confirm.component.css']
 })

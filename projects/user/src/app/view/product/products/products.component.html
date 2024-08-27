@@ -20,7 +20,6 @@
       </div>
       <div class="row justify-content-center" *ngIf="!this.isLoading">
         <div class="text-center">
-          <!-- <pagination-controls id='basicPaginate' (pageChange)="paging($event)"></pagination-controls> -->
           <mat-paginator #paginator class="demo-paginator" (page)="onPageChange($event)" [length]="totalProducts"
             [pageSize]="pageSize" [disabled]="disabled" [showFirstLastButtons]="showFirstLastButtons"
             [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []" [hidePageSize]="hidePageSize"

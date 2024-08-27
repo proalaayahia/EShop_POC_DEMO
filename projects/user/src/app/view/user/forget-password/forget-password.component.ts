@@ -1,16 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { AsyncValidator } from '../../../core/validators/async.validator';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
+import { SharedModule } from '../../../Shared/shared.module';
+import { MaterialModule } from '../../../Shared/material.module';
 
 @Component({
   selector: 'app-forget-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,MatInputModule,MatButtonModule,
-    MatFormFieldModule],
+  imports: [SharedModule, MaterialModule],
   templateUrl: './forget-password.component.html',
   styleUrls: ['./forget-password.component.css']
 })

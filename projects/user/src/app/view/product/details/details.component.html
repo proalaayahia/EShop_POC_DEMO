@@ -1,30 +1,120 @@
-<div class="container mt-4" *ngIf="!isLoading">
+<div class="container mt-4">
   <div class="row">
-    <div class="col-4">
-      <img src="{{product.image}}" i18n-alt class="img-fluid rounded-top" alt="pro">
-    </div>
-    <div class="col-8">
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title">{{product.title}}</h4>
-          <h5 class="card-title">{{product.category}}</h5>
-          <p class="card-text">{{product.description}}</p>
+    <!-- Product Images -->
+    <div class="col-md-5">
+      <mat-card class="mb-4">
+        <img mat-card-image [src]="selectedImage" alt="{{ product.title }}" class="img-fluid">
+        <div class="additional-images mt-2">
+          <div class="row">
+            <div class="col-4" *ngFor="let image of product.images">
+              <img 
+                [src]="image" 
+                alt="Additional Image" 
+                class="img-fluid mb-2"
+                (click)="swapImage(image)"
+                [class.active-image]="image === selectedImage">
+            </div>
+          </div>
         </div>
-        <ul class="list-group list-group-flush">
-          <li i18n class="list-group-item"><strong>Price: </strong>${{product.price}}</li>
-          <li i18n class="list-group-item"><strong>Rate: </strong>{{product.rating.rate}}</li>
-          <li i18n class="list-group-item"><strong>Count: </strong>{{product.rating.count}}</li>
-        </ul>
-      </div>
+      </mat-card>
+    </div>
+
+    <!-- Product Details -->
+    <div class="col-md-7">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{ product.title }}</mat-card-title>
+          <mat-card-subtitle>{{ product.category | titlecase }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <!-- Rating and Reviews -->
+        <mat-card-content>
+          <div class="rating mb-3">
+            <div class="star-rating">
+              <mat-icon *ngFor="let star of getStars(product.rating)" color="warn">{{ star }}</mat-icon>
+            </div>
+            <span class="ml-2">{{ product.rating }} out of 5 stars</span>
+          </div>
+
+          <!-- Price and Availability -->
+          <div class="price-section mb-4">
+            <h2 class="price text-success">${{ product.price }}</h2>
+            <p class="text-muted">Discount: {{ product.discountPercentage }}%</p>
+            <p><strong>Availability:</strong> {{ product.availabilityStatus }}</p>
+            <p><strong>Stock:</strong> {{ product.stock }} units</p>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <!-- Product Description -->
+          <div class="description mt-4">
+            <h3>Description</h3>
+            <p>{{ product.description }}</p>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <!-- Key Features -->
+          <div class="key-features mt-4">
+            <h3>Key Features</h3>
+            <ul class="list-unstyled">
+              <li><strong>Brand:</strong> {{ product.brand }}</li>
+              <li><strong>SKU:</strong> {{ product.sku }}</li>
+              <li><strong>Weight:</strong> {{ product.weight }} g</li>
+              <li><strong>Dimensions:</strong> {{ product.dimensions.width }} x {{ product.dimensions.height }} x {{ product.dimensions.depth }} cm</li>
+              <li><strong>Warranty:</strong> {{ product.warrantyInformation }}</li>
+              <li><strong>Shipping:</strong> {{ product.shippingInformation }}</li>
+              <li><strong>Return Policy:</strong> {{ product.returnPolicy }}</li>
+              <li><strong>Minimum Order Quantity:</strong> {{ product.minimumOrderQuantity }}</li>
+            </ul>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <!-- Tags -->
+          <div class="tags mt-4">
+            <h3>Tags</h3>
+            <span *ngFor="let tag of product.tags" class="badge badge-info mr-2">{{ tag }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
     </div>
   </div>
-</div>
-<div class="text-center w-100" *ngIf="isLoading">
-  <app-spinner></app-spinner>
-</div>
-<div style="margin: 100px;">
-  <h1 i18n>Voice recognition</h1>
-  <button i18n mat-raised-button color="primary" style="margin: 10px;" (click)="startService()">Start</button>
-  <button i18n mat-raised-button color="warn" style="margin: 10px;" (click)="stopService()">Stop</button>
-  <!-- <p>{{this.voiceService.text}}</p> -->
+
+  <!-- Customer Reviews -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Customer Reviews</mat-card-title>
+        </mat-card-header>
+        <mat-card-content *ngFor="let review of product.reviews" class="mb-3">
+          <p><strong>{{ review.reviewerName }}</strong></p>
+          <div class="star-rating">
+            <mat-icon *ngFor="let star of getStars(review.rating)" color="warn">{{ star }}</mat-icon>
+          </div>
+          <p>{{ review.comment }}</p>
+          <p class="text-muted">{{ review.date | date: 'medium' }}</p>
+          <mat-divider></mat-divider>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Meta Information -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Meta Information</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p><strong>Created At:</strong> {{ product.meta.createdAt | date: 'medium' }}</p>
+          <p><strong>Updated At:</strong> {{ product.meta.updatedAt | date: 'medium' }}</p>
+          <p><strong>Barcode:</strong> {{ product.meta.barcode }}</p>
+          <img [src]="product.meta.qrCode" alt="QR Code" class="img-fluid">
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
 </div>

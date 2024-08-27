@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from "@angular/materia
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
-import { ProductModel } from "../../models/product.model";
+import { ProductsModel } from "../../models/products.model";
 
 @Component({
   selector: 'dialog-overview-example-dialog',
@@ -19,7 +19,7 @@ export class DialogOverviewExampleDialog {
   flag: boolean = true;
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: ProductModel, private fb: FormBuilder) { }
+    @Inject(MAT_DIALOG_DATA) public data: ProductsModel, private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({

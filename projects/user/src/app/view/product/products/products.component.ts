@@ -1,30 +1,34 @@
-import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import * as $ from 'jquery';
 import { NgToastService } from 'ng-angular-popup';
 // import { fadeAnimtion } from '../../../../core/animations/fade.animation';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { PageEvent } from '@angular/material/paginator';
+
+import { IProductModel } from '../../../models/product.model';
+import { ProductService } from '../../../services/product.service';
+import { CartModel } from '../../../models/cart.model';
+import { ICategory } from '../../../models/category.model';
+import { SharedModule } from '../../../Shared/shared.module';
+import { MaterialModule } from '../../../Shared/material.module';
+import { CartService } from '../../../services/cart.service';
 import { SelectComponent } from '../../select/select.component';
 import { ProductComponent } from './product/product.component';
-import { SpinnerComponent } from '../../spinner/spinner.component';
-import { ProductModel } from '../../../models/product.model';
-import { CryptoService } from '../../../services/crypto.service';
-import { ProductService } from '../../../services/product.service';
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [SelectComponent, CommonModule, MatPaginatorModule,
-    ProductComponent, SpinnerComponent],
+  imports: [SharedModule, MaterialModule,
+    ProductComponent, SelectComponent],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css'],
   // animations: [fadeAnimtion]
 })
 export class ProductsComponent implements OnInit, OnDestroy {
-  products: ProductModel[] = []
-  paginatedProducts: ProductModel[] = []
-  categories$!: Observable<string[]>
-  cart: any[] = []
+  products: IProductModel[] = []
+  paginatedProducts: IProductModel[] = []
+  categories$!: Observable<ICategory[]>
+  cart: CartModel[] = []
+  cartService = inject(CartService);
   isLoading: boolean = false
   isAdded: boolean = false
   subscribe!: Subscription
@@ -40,17 +44,11 @@ export class ProductsComponent implements OnInit, OnDestroy {
   disabled = false;
   pageEvent!: PageEvent;
 
-  constructor(private service: ProductService,
-    private crypt: CryptoService,
-    @Inject(PLATFORM_ID) private platformId: any,
-    private toastService: NgToastService
-  ) {
+  constructor(private service: ProductService, private toastService: NgToastService) {
     this.getAllProducts()
     this.getAllCategories()
   }
-  isBrowser() {
-    return isPlatformBrowser(this.platformId);
-  }
+
   ngOnInit(): void {
     this.totalProducts = this.products.length
     this.updatePaginatedProducts();
@@ -59,8 +57,8 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.subscribe = this.service.getProducts().subscribe({
       next: (res: any) => {
-        this.products = res
         this.isLoading = false
+        this.products = res.products
         this.totalProducts = this.products.length;
         this.pageIndex = 0; // Reset to first page after filtering
         this.updatePaginatedProducts();
@@ -78,12 +76,12 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   getCategory(str: string) {
-    let url = 'https://fakestoreapi.com/products/category/' + str
+    let url = 'https://dummyjson.com/products/category/' + str
     $.ajax({
       method: 'GET',
       url: url,
       success: (res: any) => {
-        this.products = res
+        this.products = res.products
         this.totalProducts = this.products.length;
         this.pageIndex = 0;
         this.updatePaginatedProducts();
@@ -91,26 +89,26 @@ export class ProductsComponent implements OnInit, OnDestroy {
       error: (err: any) => console.log(err)
     })
   }
-  addToCart(event: any) {
-    if (this.isBrowser()) {
-      if ("cart" in localStorage) {
-        this.cart = JSON.parse(this.crypt.decryptData(localStorage?.getItem("cart")!))
-        let exist = this.cart.find(item => item.item.id == event.item.id)
-        if (exist) {
-          this.toastService.danger(event.item.title, $localize`ERROR`, 5000)
-        }
-        else {
-          this.cart.push(event)
-          localStorage?.setItem("cart", this.crypt.encryptData(JSON.stringify(this.cart)))
-          this.toastService.success($localize`Item Added To Cart Successfully.`, $localize`SUCCESS`, 5000)
-        }
+  addToCart(cart: CartModel) {
+    this.cart = this.cartService.GetCart();
+    if (this.cart.length > 0) {
+      let exist = this.cart.find(item => item.product.id == cart.product.id)
+      if (exist) {
+        this.toastService.danger(cart.product.title, $localize`ERROR`, 5000)
       }
       else {
-        this.cart.push(event)
-        localStorage?.setItem("cart", this.crypt.encryptData(JSON.stringify(this.cart)))
-        this.toastService.success($localize`Item Added To Cart Successfully.`, $localize`SUCCESS`, 5000)
+        this.pushInCart(cart)
       }
     }
+    else {
+      this.pushInCart(cart)
+    }
+  }
+
+  pushInCart(cart: CartModel) {
+    this.cart.push(cart)
+    this.cartService.SetCart(this.cart)
+    this.toastService.success($localize`Item Added To Cart Successfully.`, $localize`SUCCESS`, 5000)
   }
   //pagination
   onPageChange(event: PageEvent) {
