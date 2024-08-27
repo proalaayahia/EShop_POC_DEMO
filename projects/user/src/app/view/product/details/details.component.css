@@ -1,0 +1,42 @@
+.container {
+    max-width: 1200px;
+  }
+  
+  .img-fluid {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    cursor: pointer;
+  }
+  
+  .rating .star-rating {
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .price-section .price {
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .key-features ul {
+    padding-left: 0;
+  }
+  
+  .badge {
+    font-size: 0.9rem;
+  }
+  
+  .star-rating mat-icon {
+    font-size: 24px;
+    margin-right: 4px;
+  }
+  
+  .mat-divider {
+    margin-top: 10px;
+  }
+  
+  .additional-images img.active-image {
+    border: 2px solid #007bff;
+  }
+  

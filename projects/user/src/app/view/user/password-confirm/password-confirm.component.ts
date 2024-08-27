@@ -1,19 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatIconModule } from '@angular/material/icon';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import Validation from '../../../core/validators/confirm.pssw.validator';
 import { ValidatePassword } from '../../../core/validators/validate.password';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
+import { SharedModule } from '../../../Shared/shared.module';
+import { MaterialModule } from '../../../Shared/material.module';
 
 @Component({
   selector: 'app-password-confirm',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,MatInputModule,MatButtonModule,
-    MatFormFieldModule, MatDividerModule, MatIconModule],
+  imports: [SharedModule,MaterialModule],
   templateUrl: './password-confirm.component.html',
   styleUrls: ['./password-confirm.component.css']
 })

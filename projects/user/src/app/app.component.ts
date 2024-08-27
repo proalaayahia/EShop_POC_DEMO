@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { routingAnimation } from './core/animations/routing.animation';
 
 @Component({
   selector: 'app-root',

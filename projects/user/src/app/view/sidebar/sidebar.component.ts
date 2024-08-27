@@ -1,23 +1,12 @@
 import { Input, Component, Inject, PLATFORM_ID } from '@angular/core'
-import { CommonModule, isPlatformBrowser } from '@angular/common'
-import { RouterModule } from '@angular/router'
-import { MatIconModule } from '@angular/material/icon'
-import { MatBadgeModule } from '@angular/material/badge'
-import { MatMenuModule } from '@angular/material/menu'
-import { MatSidenavModule } from '@angular/material/sidenav'
-import { MatFormFieldModule } from '@angular/material/form-field'
-import { MatListModule } from '@angular/material/list'
-import { MatInputModule } from '@angular/material/input'
-import { MatToolbarModule } from '@angular/material/toolbar'
-import { MatButtonModule } from '@angular/material/button'
+import { isPlatformBrowser } from '@angular/common'
+import { SharedModule } from '../../Shared/shared.module'
+import { MaterialModule } from '../../Shared/material.module'
 
 @Component({
   selector: 'app-sidebar',
   standalone:true,
-  imports:[CommonModule,RouterModule,MatToolbarModule,MatButtonModule,
-    MatIconModule,MatBadgeModule,MatMenuModule,
-    MatSidenavModule,MatFormFieldModule,MatListModule,MatInputModule
-  ],
+  imports:[SharedModule,MaterialModule],
   host: {
     'ngSkipHydration': ''  // This adds the ngSkipHydration attribute to the host element
   },

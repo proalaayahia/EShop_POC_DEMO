@@ -1,23 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { AsyncValidator } from '../../../core/validators/async.validator';
 import { ValidatePassword } from '../../../core/validators/validate.password';
 import Validation from '../../../core/validators/confirm.pssw.validator';
-
+import { SharedModule } from '../../../Shared/shared.module';
+import { MaterialModule } from '../../../Shared/material.module';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatInputModule, MatButtonModule,
-    MatCheckboxModule,
-    MatFormFieldModule, MatDividerModule, MatIconModule],
+  imports: [SharedModule,MaterialModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
