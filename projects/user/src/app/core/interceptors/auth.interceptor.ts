@@ -1,17 +1,33 @@
 import { HttpInterceptorFn } from "@angular/common/http";
+import { inject, PLATFORM_ID } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
+
+import { CryptoService } from "../../services/crypto.service";
 
 export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
-    // Retrieve the JWT token from AuthService
-    // const authService = new AuthService(); // Ensure this aligns with how you provide AuthService
-    // const authToken = authService.getToken();
+    const platformId = inject(PLATFORM_ID);
+    const crypt = inject(CryptoService);
+    const isBrowser = isPlatformBrowser(platformId);
 
-    // Clone the request and add the Authorization header
-    // const authReq = req.clone({
-    //   setHeaders: {
-    //     Authorization: authToken ? `Bearer ${authToken}` : ''
-    //   }
-    // });
+    const specificEndpoint = '/api/secure/';
 
-    // Pass the cloned request to the next handler
+    if (req.url.includes(specificEndpoint)) {
+        let authToken: string = "";
+        if (isBrowser) {
+            if ('token' in localStorage) {
+                const encryptedToken = localStorage.getItem("token")!;
+                authToken = JSON.parse(crypt.decryptData(encryptedToken));
+            }
+        }
+
+        const authReq = req.clone({
+            setHeaders: {
+                Authorization: authToken ? `Bearer ${authToken}` : ''
+            }
+        });
+
+        return next(authReq);
+    }
+
     return next(req);
 };

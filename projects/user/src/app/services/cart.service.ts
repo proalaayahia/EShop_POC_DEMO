@@ -3,17 +3,21 @@ import { HttpClient } from "@angular/common/http";
 import { inject, Inject, Injectable, PLATFORM_ID } from "@angular/core";
 import { CryptoService } from "./crypto.service";
 import { CartModel } from "../models/cart.model";
+import { API_BASE_URL } from "../core/constants/api.const";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
   private crypt = inject(CryptoService);
-  url: string = "https://fakestoreapi.com/";
-  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: any) {
+  url!: string
+  constructor(private http: HttpClient,
+    @Inject(API_BASE_URL) public apiUrl: string,
+    @Inject(PLATFORM_ID) private platformId: any) {
+      this.url=apiUrl
   }
   addCart(model: any) {
-    return this.http.post(this.url + 'carts', model)
+    return this.http.post(this.url + '/carts/add', model)
   }
   isBrowser = () => isPlatformBrowser(this.platformId);
 
