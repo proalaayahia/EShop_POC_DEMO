@@ -3,12 +3,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { SharedModule } from '../../../Shared/shared.module';
 import { MaterialModule } from '../../../Shared/material.module';
+import { AuthService } from '../../../services/auth.service';
+import { ILoginModel } from '../../../models/account/login.model';
 // import { AsyncValidator } from 'src/app/validators/async.validator';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [SharedModule,MaterialModule],
+  imports: [SharedModule, MaterialModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
   changeDetection: ChangeDetectionStrategy.Default
@@ -26,8 +28,7 @@ export class LoginComponent implements OnInit {
       required: $localize`password is required`
     }
   }
-  url = 'https://jsonplaceholder.typicode.com/users/1'
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -42,6 +43,9 @@ export class LoginComponent implements OnInit {
   get password() {
     return this.loginForm.get('password');
   }
+  get isRemember() {
+    return this.loginForm.get('rememberMe');
+  }
   //*********************************Validation********************************* */
   userNameRequired() {
     return this.userName?.errors?.['required'] && (this.userName?.touched || this.userName?.dirty);
@@ -54,5 +58,23 @@ export class LoginComponent implements OnInit {
   submitDisabledIf() {
     return this.loginForm.invalid || this.userName?.pending;
   }
-  submit() { }
+  submit() {
+    if (this.loginForm.invalid) {
+      return null;
+    }
+    const loginData: ILoginModel = {
+      username: this.userName?.value,
+      password: this.password?.value,
+      expiresInMins: this.isRemember?.value ? 60 : 30
+    };
+    let token = this.authService.login(loginData).subscribe({
+      next: (result) => {
+        console.log(result)
+      },
+      error: (err) => {
+        console.log(err)
+      }
+    });
+    return token;
+  }
 }

@@ -2,13 +2,19 @@ import { Routes } from '@angular/router';
 import { ViewComponent } from './view/view.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { HomeComponent } from './view/home/home.component';
+import { DetailsResolver } from './core/resolvers/details.resolver';
 
 export const routes: Routes = [{
   path: '', component: ViewComponent, children:
     [
       { path: '',component:HomeComponent,pathMatch:'full'},
       { path: 'products', loadComponent: () => import('./view/product/products/products.component').then(m => m.ProductsComponent) },
-      { path: 'details/:id', loadComponent: () => import('./view/product/details/details.component').then(m => m.DetailsComponent) },
+      { path: 'details/:id', 
+        loadComponent: () => 
+          import('./view/product/details/details.component')
+        .then(m => m.DetailsComponent),
+        resolve:{product:DetailsResolver}
+      },
       { path: 'cart', loadComponent: () => import('./view/cart/product-cart/product-cart.component').then(m => m.ProductCartComponent) },
       {
         path: 'account', children: [
