@@ -17,12 +17,12 @@ import { StorageService } from '../../../services/storage.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit,OnDestroy{
+export class LoginComponent implements OnInit, OnDestroy {
   // isAr: boolean = false
   hide = true
   loginForm!: FormGroup
-  subscribtion!:Subscription
-  redirect!:string
+  subscribtion!: Subscription
+  redirect!: string
   messages = {
     username: {
       required: $localize`username is required`,
@@ -33,11 +33,11 @@ export class LoginComponent implements OnInit,OnDestroy{
     }
   }
   storage = inject(StorageService)
-  route=inject(ActivatedRoute);
-  router=inject(Router)
-  constructor(private fb: FormBuilder, private authService: AuthService) { 
-    this.subscribtion=this.route.queryParamMap.subscribe((q)=>{
-      this.redirect=q.get("redirect")!
+  route = inject(ActivatedRoute);
+  router = inject(Router)
+  constructor(private fb: FormBuilder, private authService: AuthService) {
+    this.subscribtion = this.route.queryParamMap.subscribe((q) => {
+      this.redirect = q.get("redirect")!
     });
   }
 
@@ -78,15 +78,17 @@ export class LoginComponent implements OnInit,OnDestroy{
       password: this.password?.value,
       expiresInMins: this.isRemember?.value ? 60 : 30
     };
-     this.subscribtion= this.authService.login(loginData).subscribe({
+    this.subscribtion = this.authService.login(loginData).subscribe({
       next: (result: TokenModel) => {
-        this.storage.Set('token', result.token)
-        if(result){
-          const link=`/${this.redirect}`
-          this.router.navigate([link])
-          this.router.navigateByUrl(link)
+        if (result) {
+          this.storage.Set('token', result.token)
+          if (this.redirect) {
+            const link = `/${this.redirect}`
+            this.router.navigate([link])
+          } else {
+            this.router.navigate(['/home'])
+          }
         }
-        console.log(result)
       },
       error: (err) => {
         console.log(err)
@@ -95,14 +97,13 @@ export class LoginComponent implements OnInit,OnDestroy{
     return null;
   }
   ngOnDestroy(): void {
-    if(this.subscribtion){
+    if (this.subscribtion) {
       this.subscribtion.unsubscribe();
     }
   }
 }
 
-export interface TokenModel
-{
+export interface TokenModel {
   token: string,
   refreshToken: string,
   id: number,

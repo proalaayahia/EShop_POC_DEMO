@@ -9,7 +9,7 @@ import { SharedModule } from '../../../Shared/shared.module';
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [SharedModule,MaterialModule],
+  imports: [SharedModule, MaterialModule],
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.css'],
   // providers: [VoiceRecognitionService]
@@ -28,7 +28,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // this.getPoductDetails(this.id)
-    this.subscriping= this.activeRoute.data.subscribe({
+    this.subscriping = this.activeRoute.data.subscribe({
       next: (result) => {
         console.log(result)
         this.product = result['product']
@@ -59,7 +59,9 @@ export class DetailsComponent implements OnInit, OnDestroy {
     this.selectedImage = image;
   }
   ngOnDestroy(): void {
-    this.subscriping.unsubscribe()
+    if (this.subscriping) {
+      this.subscriping.unsubscribe()
+    }
   }
 
   startService() {

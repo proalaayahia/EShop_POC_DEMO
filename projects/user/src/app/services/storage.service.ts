@@ -30,4 +30,16 @@ export class StorageService {
         }
         return data;
     }
+    Delete = (item: string) => {
+        if (this.isBrowser()) {
+            if (item in localStorage) {
+                localStorage.removeItem(item)
+            }
+        }
+    }
+    Clear=()=>{
+        if (this.isBrowser()) {
+            localStorage.clear()
+        }
+    }
 }
