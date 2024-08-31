@@ -1,68 +1,61 @@
-<div class="sidebar-container" [class.sidebar-is-mobile]="isMobile" >
+<div class="sidebar-container" [class.sidebar-is-mobile]="isMobile">
   <mat-toolbar color="primary" class="sidebar-toolbar sticky-top" [ngClass]="isNav?'bg-dark':'bg-secondary'">
     <button mat-icon-button (click)="snav.toggle()">
-      <mat-icon aria-hidden="false" fontIcon="menu"></mat-icon>
+      <mat-icon fontIcon="menu"></mat-icon>
     </button>
-    <h1 class="sidebar-app-name"><button mat-raised-button color="primary"
-        routerLink="" i18n>SHOPOY</button>
+    <h1 class="sidebar-app-name"><button mat-raised-button color="primary" routerLink="" i18n>SHOPOY</button>
     </h1>
     <!-- ========== Start Nav View ========== -->
 
     <div class="d-flex w-100 justify-content-end" *ngIf="isNav">
       <button i18n-matTooltip matTooltip="Search" matTooltipClass="bg-dark" mat-icon-button data-bs-toggle="modal"
         data-bs-target="#modalId">
-        <mat-icon aria-hidden="false" fontIcon="search"></mat-icon>
+        <mat-icon fontIcon="search"></mat-icon>
       </button>
       <!-- <button matTooltip="Language" matTooltipClass="bg-dark" mat-icon-button
         (click)="langChange($event);opened=false"> -->
-        <!-- <mat-icon aria-hidden="false" [matBadge]="isClick?'EN':'AR'" matBadgePosition="below after" matBadgeColor="primary" fontIcon="language">
+      <!-- <mat-icon [matBadge]="isClick?'EN':'AR'" matBadgePosition="below after" matBadgeColor="primary" fontIcon="language">
         </mat-icon>
       </button> -->
       <button i18n-matTooltip matTooltip="Your Cart" matTooltipClass="bg-dark" class="cart-notify" mat-icon-button
         routerLink="cart">
-        <mat-icon aria-hidden="false" [matBadge]="cart.length" [matBadgeHidden]="cart.length<=0"
-          matBadgeColor="accent" fontIcon="shopping_cart">
+        <mat-icon [matBadge]="cart.length" [matBadgeHidden]="cart.length<=0"[ngClass]="cart.length<=0?'text-secondary':'text-danger'" matBadgeColor="accent"
+          fontIcon="shopping_cart">
         </mat-icon>
       </button>
       <button i18n-matTooltip matTooltip="notifications" matTooltipClass="bg-dark" class="cart-notify" mat-icon-button>
-        <mat-icon aria-hidden="false" style="color: #666 !important;" *ngIf="cart.length<=0" fontIcon="notifications">
-        </mat-icon>
-        <mat-icon aria-hidden="false" *ngIf="cart.length>0" [matBadge]="cart.length" [matBadgeHidden]="cart.length<=0"
-          matBadgeColor="accent" fontIcon="notifications_active">
-        </mat-icon>
+        <mat-icon *ngIf="cart.length<=0" class="text-secondary" fontIcon="notifications"/>
+        <mat-icon *ngIf="cart.length>0" [matBadge]="cart.length" [matBadgeHidden]="cart.length<=0"
+          matBadgeColor="accent" class="text-info" fontIcon="notifications_active"/>
       </button>
-      <button mat-icon-button class="nav-item dropdown">
-        <button mat-icon-button [matMenuTriggerFor]="menu">
-          <mat-icon aria-hidden="false" fontIcon="account_circle"></mat-icon>
-          <mat-icon aria-hidden="false" [style.marginLeft]="'-6px'" fontIcon="arrow_drop_down"></mat-icon>
+      <button mat-icon-button [matMenuTriggerFor]="menu" class="nav-item dropdown text-warning">
+        <mat-icon fontIcon="account_circle"></mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item routerLink="account/register">
+          <mat-icon fontIcon="person_add"></mat-icon>
+          <span i18n>Register</span>
         </button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item routerLink="account/register">
-            <mat-icon aria-hidden="false" fontIcon="person_add"></mat-icon>
-            <span i18n>Register</span>
-          </button>
-          <button mat-menu-item routerLink="account/login">
-            <mat-icon aria-hidden="false" fontIcon="perm_identity"></mat-icon>
-            <span i18n>LogIn</span>
-          </button>
-          <button mat-menu-item disabled>
-            <mat-icon aria-hidden="false" fontIcon="exit_to_app"></mat-icon>
-            <span i18n>LogOut</span>
-          </button>
-        </mat-menu>
-      </button>
+        <button mat-menu-item routerLink="account/login">
+          <mat-icon fontIcon="perm_identity"></mat-icon>
+          <span i18n>LogIn</span>
+        </button>
+        <button mat-menu-item disabled>
+          <mat-icon fontIcon="exit_to_app"></mat-icon>
+          <span i18n>LogOut</span>
+        </button>
+      </mat-menu>
     </div>
     <!-- ========== End Nav View ========== -->
   </mat-toolbar>
 
   <mat-sidenav-container class="sidebar-sidenav-container" [style.backgroundColor]="'#ecf0f3'"
     [style.marginTop.px]="isMobile ? 56 : 0">
-    <mat-sidenav [ngClass]="isNav?'position-fixed':''" [style]="isNav?'top:60px':''" #snav mode="side"
+    <mat-sidenav [class.position-fixed]="isNav" [style]="isNav?'top:60px':''" #snav mode="side"
       [fixedInViewport]="isMobile" fixedTopGap="56" [opened]="opened">
       <mat-nav-list>
-        <a *ngFor="let link of links" [routerLink]="link.route"
-          mat-list-item>
-          <mat-icon aria-hidden="false" mat-list-icon [fontIcon]="link.icon"></mat-icon> {{link.text.toUpperCase()}}
+        <a *ngFor="let link of links" [routerLink]="link.route" mat-list-item>
+          <mat-icon mat-list-icon [fontIcon]="link.icon"></mat-icon> {{link.text.toUpperCase()}}
         </a>
       </mat-nav-list>
     </mat-sidenav>
@@ -82,7 +75,7 @@
       <div class="modal-header pb-0">
         <div class="w-50 d-flex justify-content-end">
           <h3 i18n class="modal-title mb-1" id="modalTitleId">
-           Search</h3>
+            Search</h3>
         </div>
         <div class="w-50 d-flex justify-content-start"><button type="button" class="btn-close" data-bs-dismiss="modal"
             aria-label="Close"></button>
@@ -93,7 +86,7 @@
           <mat-label i18n>Search</mat-label>
           <input matInput i18n-placeholder placeholder="Search. . .">
           <button i18n mat-icon-button matPrefix>
-            <mat-icon aria-hidden="false" fontIcon="search"></mat-icon>
+            <mat-icon fontIcon="search"></mat-icon>
           </button>
         </mat-form-field>
       </div>

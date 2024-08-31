@@ -1,10 +1,13 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, inject, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { SharedModule } from '../../../Shared/shared.module';
 import { MaterialModule } from '../../../Shared/material.module';
 import { AuthService } from '../../../services/auth.service';
 import { ILoginModel } from '../../../models/account/login.model';
+import { StorageService } from '../../../services/storage.service';
 // import { AsyncValidator } from 'src/app/validators/async.validator';
 
 @Component({
@@ -12,13 +15,14 @@ import { ILoginModel } from '../../../models/account/login.model';
   standalone: true,
   imports: [SharedModule, MaterialModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
-  changeDetection: ChangeDetectionStrategy.Default
+  styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit,OnDestroy{
   // isAr: boolean = false
   hide = true
   loginForm!: FormGroup
+  subscribtion!:Subscription
+  redirect!:string
   messages = {
     username: {
       required: $localize`username is required`,
@@ -28,7 +32,14 @@ export class LoginComponent implements OnInit {
       required: $localize`password is required`
     }
   }
-  constructor(private fb: FormBuilder, private authService: AuthService) { }
+  storage = inject(StorageService)
+  route=inject(ActivatedRoute);
+  router=inject(Router)
+  constructor(private fb: FormBuilder, private authService: AuthService) { 
+    this.subscribtion=this.route.queryParamMap.subscribe((q)=>{
+      this.redirect=q.get("redirect")!
+    });
+  }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -67,14 +78,38 @@ export class LoginComponent implements OnInit {
       password: this.password?.value,
       expiresInMins: this.isRemember?.value ? 60 : 30
     };
-    let token = this.authService.login(loginData).subscribe({
-      next: (result) => {
+     this.subscribtion= this.authService.login(loginData).subscribe({
+      next: (result: TokenModel) => {
+        this.storage.Set('token', result.token)
+        if(result){
+          const link=`/${this.redirect}`
+          this.router.navigate([link])
+          this.router.navigateByUrl(link)
+        }
         console.log(result)
       },
       error: (err) => {
         console.log(err)
       }
     });
-    return token;
+    return null;
   }
+  ngOnDestroy(): void {
+    if(this.subscribtion){
+      this.subscribtion.unsubscribe();
+    }
+  }
+}
+
+export interface TokenModel
+{
+  token: string,
+  refreshToken: string,
+  id: number,
+  username: string,
+  email: string,
+  firstName: string,
+  lastName: string,
+  gender: string,
+  image: string
 }

@@ -3,10 +3,11 @@ import { NgToastService } from 'ng-angular-popup';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
-import { CartService } from '../../../services/cart.service';
-import { CartModel } from '../../../models/cart.model';
-import { SharedModule } from '../../../Shared/shared.module';
-import { MaterialModule } from '../../../Shared/material.module';
+import { CartModel } from '../../models/cart.model';
+import { CartService } from '../../services/cart.service';
+import { MaterialModule } from '../../Shared/material.module';
+import { SharedModule } from '../../Shared/shared.module';
+
 @Component({
   selector: 'app-product-cart',
   standalone: true,
