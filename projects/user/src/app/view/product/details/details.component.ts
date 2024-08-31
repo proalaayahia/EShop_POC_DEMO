@@ -23,7 +23,6 @@ export class DetailsComponent implements OnInit, OnDestroy {
   selectedImage: string = "";
 
   constructor(private activeRoute: ActivatedRoute) {
-    // this.id = this.activeRoute.snapshot.paramMap.get("id")
     // this.voiceService.init();
   }
 

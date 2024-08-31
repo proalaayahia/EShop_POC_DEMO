@@ -4,8 +4,9 @@
       <img class="figure-img " src="{{data.thumbnail}}">
     </a>
     <ul class="product-links">
-      <li *ngIf="!addBtn"><a mat-icon-button style="cursor:pointer;" (click)="addBtn=true">
-          <mat-icon>shopping_cart</mat-icon>
+      <li><a mat-icon-button style="cursor:pointer;" (click)="addBtn=!addBtn">
+          <mat-icon *ngIf="!addBtn">shopping_cart</mat-icon>
+          <mat-icon *ngIf="addBtn">cancel</mat-icon>
         </a></li>
       <li><a mat-icon-button>
           <mat-icon>thumb_up_alt</mat-icon>
@@ -25,8 +26,8 @@
       <mat-icon *ngFor="let star of getStars(data.rating)" color="warn">{{ star }}</mat-icon>
     </ul>
     <div class="shop-form" *ngIf="addBtn">
-      <mat-form-field class="w-100 cart-pro" style="font-size: 14px !important" appearance="outline">
-        <input class="text-center" matInput type="number" min="1" [(ngModel)]="amount">
+      <mat-form-field class="w-100 cart-pro" appearance="outline">
+        <input class="text-center position-absolute" matInput type="number" min="1" [(ngModel)]="amount">
         <button matSuffix mat-icon-button color="warn" [disabled]="amount<=0" (click)="addProduct();addBtn=false">
           <mat-icon class="add-shopping">add_shopping_cart</mat-icon>
         </button>
