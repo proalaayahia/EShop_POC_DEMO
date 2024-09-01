@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { IProductModel } from '../../../../models/product.model';
-import { CartModel } from '../../../../models/cart.model';
+import { ICart } from '../../../../models/cart.model';
 import { SharedModule } from '../../../../Shared/shared.module';
 import { MaterialModule } from '../../../../Shared/material.module';
 
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [SharedModule,MaterialModule],
+  imports: [SharedModule, MaterialModule],
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css']
 })
@@ -20,7 +20,8 @@ export class ProductComponent {
   @Output() action = new EventEmitter()
   constructor() { }
   addProduct() {
-    this.action.emit({ product: this.data, quantity: this.amount } as CartModel)
+    const cart: ICart = { product: this.data, quantity: this.amount }
+    this.action.emit(cart)
   }
   getStars(rating: number): string[] {
     const stars = [];

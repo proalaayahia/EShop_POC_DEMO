@@ -1,6 +1,6 @@
 import { Component, DoCheck, inject } from '@angular/core';
 import { SidebarComponent } from '../view/sidebar/sidebar.component';
-import { CartModel } from '../models/cart.model';
+import { ICart } from '../models/cart.model';
 import { CartService } from '../services/cart.service';
 import { StorageService } from '../services/storage.service';
 
@@ -12,7 +12,7 @@ import { StorageService } from '../services/storage.service';
   styleUrls: ['./nav-menu.component.css']
 })
 export class NavMenuComponent implements DoCheck {
-  cart: CartModel[] = []
+  cart: ICart[]=[]
   isLogged:boolean=false
   links = [
     { route: '', icon: 'home', text: $localize`Home` },
@@ -26,7 +26,7 @@ export class NavMenuComponent implements DoCheck {
   constructor() { }
 
   ngDoCheck() {
-    this.cart = this.cartService.GetCart();
+    this.cart = this.cartService.GetCart()??[] as ICart[];
     this.isLogged=!!this.storage.Get('token')
   }
 }

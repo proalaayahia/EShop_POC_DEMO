@@ -1,33 +1,32 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { NgToastService } from 'ng-angular-popup';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
-import { CartModel } from '../../models/cart.model';
+import { ICart } from '../../models/cart.model';
 import { CartService } from '../../services/cart.service';
 import { MaterialModule } from '../../Shared/material.module';
 import { SharedModule } from '../../Shared/shared.module';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-product-cart',
   standalone: true,
-  imports: [SharedModule,MaterialModule],
+  imports: [SharedModule, MaterialModule],
   templateUrl: './product-cart.component.html',
   styleUrls: ['./product-cart.component.css']
 })
 export class ProductCartComponent implements OnInit, OnDestroy {
   private service: CartService = inject(CartService)
 
-  cart: CartModel[] = []
-  sortedData: CartModel[] = [];
+  cart: ICart[] = []
+  sortedData: ICart[] = [];
   total: any = 0
   isSuccess = false
-  loading: boolean = false
   subscribe!: Subscription
 
-  constructor(private toastr: NgToastService) {
-    this.cart = this.service.GetCart();
-    this.sortedData = this.cart.slice();
+  constructor(private toastr: ToastrService) {
+    this.cart = this.service.GetCart() ?? [] as ICart[]
+    this.sortedData = this.cart?.slice();
   }
   ngOnInit(): void {
     this.getTotalCart()
@@ -64,7 +63,7 @@ export class ProductCartComponent implements OnInit, OnDestroy {
       else {
         if (this.cart.length > 0) {
           this.service.SetCart(this.cart);
-          this.sortedData=this.cart
+          this.sortedData = this.cart
         }
       }
     }
@@ -77,23 +76,22 @@ export class ProductCartComponent implements OnInit, OnDestroy {
     for (let i in this.cart) {
       this.total += this.cart[i].product.price * this.cart[i].quantity
     }
-    this.sortedData=this.cart
+    this.sortedData = this.cart
   }
   clearCart() {
-    this.cart = [] as CartModel[];
+    this.cart = [] as ICart[];
     this.getTotalCart()
     this.service.SetCart(this.cart);
-    this.sortedData=this.cart
+    this.sortedData = this.cart
   }
   delete(index: number) {
     this.cart.splice(index, 1)
     this.getTotalCart()
     this.service.SetCart(this.cart);
-    this.sortedData=this.cart
+    this.sortedData = this.cart
   }
   orderCartNow() {
     if (this.cart.length > 0) {
-      this.loading = true
       let cartProduct = this.cart.map(item => {
         return { productId: item.product.id, quantity: item.quantity }
       })
@@ -104,10 +102,13 @@ export class ProductCartComponent implements OnInit, OnDestroy {
       }
       this.subscribe = this.service.addCart(model).subscribe({
         next: (res: any) => {
-          this.toastr.success($localize`Your order sent successfully.`, $localize`SUCCESS`, 3000)
-          this.loading = false
+          this.service.DeleteCart()
+          this.cart = []
+          this.getTotalCart()
+          this.sortedData = this.cart
+          this.toastr.success($localize`Your order sent successfully.`, $localize`SUCCESS`)
         },
-        error: (err: any) => { this.toastr.danger(err, 'ERROR', 3000) }
+        error: (err: any) => { this.toastr.error(err, 'ERROR') }
       })
     }
   }

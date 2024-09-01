@@ -14,7 +14,6 @@ const accounts_children: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' }
 ];
 const accounts: Routes = [
-  { path: '', redirectTo: 'account/login', pathMatch: 'full' },
   {
     path: 'account', children: accounts_children
   }
@@ -40,7 +39,8 @@ export const routes: Routes = [{
       ...accounts,
       {
         path: 'home', component: HomeComponent
-      }
+      },
+      { path: '', component: HomeComponent, pathMatch: 'full' },
     ]
 },
 { path: '**', component: NotFoundComponent, title: '404' }

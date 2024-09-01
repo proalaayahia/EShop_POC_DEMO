@@ -1,4 +1,4 @@
-<div class="container-fluid mt-3" *ngIf="!loading">
+<div class="container-fluid mt-3">
   <div class="row">
     <div class="col-9 text-center">
       <h3 i18n class="tex-secondary">You Have <span class="text-danger">{{cart.length}}</span> Items In Your Cart</h3>
@@ -23,7 +23,7 @@
           <th i18n>Options</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody *ngIf="sortedData.length>0;else empty">
         <tr *ngFor="let item of sortedData;let i=index">
           <td><img src="{{item.product.thumbnail}}" class="img-fluid img-responsive rounded-top" alt="product"></td>
           <td>{{item.product.title}}</td>
@@ -35,8 +35,9 @@
                 <button matPrefix mat-icon-button color="primary" class="mx-2" (click)="minus(i)">
                   <mat-icon matTooltipPosition="left" matTooltip="-1">remove</mat-icon>
                 </button>
-                <input matInput [(ngModel)]="item.quantity" type="number" class="text-center position-absolute" (change)="detectChange(i)"
-                  min="1" value="{{item.quantity}}" placeholder="Choose Quantity" i18n-placeholder>
+                <input matInput [(ngModel)]="item.quantity" type="number" class="text-center position-absolute"
+                  (change)="detectChange(i)" min="1" value="{{item.quantity}}" placeholder="Choose Quantity"
+                  i18n-placeholder>
                 <button matSuffix mat-icon-button color="primary" class="mx-2" (click)="plus(i)">
                   <mat-icon matTooltipPosition="right" matTooltip="+1">add</mat-icon>
                 </button>
@@ -67,6 +68,17 @@
     </div>
   </fieldset>
 </div>
-<div class="text-center w-100" *ngIf="loading">
+<ng-template #empty>
+  <tbody>
+    <tr class="fw-bold">
+      <td></td>
+      <td></td>
+      <td class="lead">your cart is empty.</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</ng-template>
+<!-- <div class="text-center w-100" *ngIf="loading">
   <app-spinner></app-spinner>
-</div>
+</div> -->
