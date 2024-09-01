@@ -12,11 +12,6 @@
         data-bs-target="#modalId">
         <mat-icon class="text-success" aria-hidden="false" fontIcon="search"></mat-icon>
       </button>
-      <!-- <button matTooltip="Language" matTooltipClass="bg-dark" mat-icon-button
-        (click)="langChange($event);opened=false"> -->
-      <!-- <mat-icon aria-hidden="false" [matBadge]="isClick?'EN':'AR'" matBadgePosition="below after" matBadgeColor="primary" fontIcon="language">
-        </mat-icon>
-      </button> -->
       <button i18n-matTooltip matTooltip="Your Cart" matTooltipClass="bg-dark" class="cart-notify" mat-icon-button
         routerLink="cart">
         <mat-icon aria-hidden="false" [matBadge]="cart.length" [matBadgeHidden]="cart.length<=0"

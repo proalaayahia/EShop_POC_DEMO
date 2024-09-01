@@ -19,7 +19,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "localize":["ar-EG"],
+            "localize":["en-US"],
             "allowedCommonJsDependencies":["jquery","crypto-js","sweetalert2"],
             "outputPath": "dist/user",
             "index": "projects/user/src/index.html",
