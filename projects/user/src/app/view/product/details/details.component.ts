@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { IProductModel } from '../../../models/product.model';
 import { MaterialModule } from '../../../Shared/material.module';
 import { SharedModule } from '../../../Shared/shared.module';
+import { SpinnerService } from '../../../services/spinner.service';
 
 @Component({
   selector: 'app-details',
@@ -17,11 +18,10 @@ import { SharedModule } from '../../../Shared/shared.module';
 export class DetailsComponent implements OnInit, OnDestroy {
   id: any
   product!: IProductModel
-  isLoading: boolean = false
   subscriping!: Subscription
   text!: string;
   selectedImage: string = "";
-
+  $isLoading = inject(SpinnerService).isLoading$
   constructor(private activeRoute: ActivatedRoute) {
     // this.voiceService.init();
   }

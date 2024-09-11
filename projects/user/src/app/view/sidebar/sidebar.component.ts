@@ -2,7 +2,7 @@ import { Input, Component, Inject, PLATFORM_ID, inject } from '@angular/core'
 import { isPlatformBrowser } from '@angular/common'
 import { SharedModule } from '../../Shared/shared.module'
 import { MaterialModule } from '../../Shared/material.module'
-import { CartModel } from '../../models/cart.model'
+import { ICart } from '../../models/cart.model'
 import { StorageService } from '../../services/storage.service'
 import { Router } from '@angular/router'
 
@@ -19,7 +19,7 @@ import { Router } from '@angular/router'
 export class SidebarComponent {
   @Input() links: any[] = []
   opened: boolean = false
-  @Input('Shopping_Cart') cart: CartModel[] = []
+  @Input('Shopping_Cart') cart: ICart[] = []
   @Input() isNav: boolean = false;
   @Input() isLoggedIn: boolean = false;
   public isMobile: boolean = false;

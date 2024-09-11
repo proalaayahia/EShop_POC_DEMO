@@ -7,7 +7,7 @@
         class="text-center">
         <mat-option [style.fontSize]="'18px !important'" class="text-center" value="all" i18n *ngIf="isAllOption">ALL PRODUCTS
         </mat-option>
-        <mat-option [style.fontSize]="'18px !important'" class="text-center" *ngFor="let cate of data$|async"
+        <mat-option [style.fontSize]="'18px !important'" class="text-center" *ngFor="let cate of data$()|async"
           value="{{cate.name}}">
           {{cate.name}}
         </mat-option>
