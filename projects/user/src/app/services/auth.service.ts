@@ -26,11 +26,11 @@ export class AuthService {
 
     return this.http.post<TokenModel>(`${this.url}`, body, { headers });
   }
-  GetCurrentUser = ():number=> {
+  GetCurrentUser = (): number => {
     let token = this.storage.Get('token');
     if (token) {
-      let user = jwtDecode(token) as {id:number}
-      console.log('user data: ',user)
+      let user = jwtDecode(token) as { id: number }
+      console.log('user data: ', user)
       return user.id
     }
     return 0;

@@ -84,7 +84,9 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.storage.Set('token', result.token)
           if (this.redirect) {
             const link = `/${this.redirect}`
-            this.router.navigate([link])
+            this.router.navigate([link]).then(()=>{
+              location.reload()
+            })
           } else {
             this.router.navigate(['/home'])
           }

@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal, Signal } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import * as $ from 'jquery';
 // import { fadeAnimtion } from '../../../../core/animations/fade.animation';
@@ -23,16 +23,16 @@ import { ICart } from '../../../models/cart.model';
   // animations: [fadeAnimtion]
 })
 export class ProductsComponent implements OnInit, OnDestroy {
-  products: IProductModel[] = []
-  paginatedProducts: IProductModel[] = []
-  categories$!: Observable<ICategory[]>
-  cart: ICart[] = []
+  products = signal<IProductModel[]>([])
+  paginatedProducts = signal<IProductModel[]>([])
+  categories$!: Signal<Observable<ICategory[]>>
+  cart = signal<ICart[]>([])
   cartService = inject(CartService);
-  $isLoading = inject(SpinnerService).isLoading$
-  isAdded: boolean = false
+  spinner = inject(SpinnerService)
+  $isLoading = signal<Observable<boolean>>(this.spinner.isLoading$)
   subscribe!: Subscription
   //**********pagination*********** */
-  totalProducts: number = 0
+  totalProducts = signal<number>(0)
   pageSize = 10;
   pageIndex = 0;
   pageSizeOptions = [5, 10, 25];
@@ -49,14 +49,15 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.totalProducts = this.products.length
+    this.totalProducts.set(this.products().length)
     this.updatePaginatedProducts();
   }
   getAllProducts() {
     this.subscribe = this.service.getProducts().subscribe({
       next: (res: any) => {
-        this.products = res.products
-        this.totalProducts = this.products.length;
+        this.products.set(res.products)
+        console.log("all products", res.products)
+        this.totalProducts.update(() => this.products().length)
         this.pageIndex = 0; // Reset to first page after filtering
         this.updatePaginatedProducts();
       }, error: (err: any) => console.log("something went error. " + err)
@@ -64,7 +65,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   getAllCategories() {
-    this.categories$ = this.service.getCategories()
+    this.categories$ = computed(() => this.service.getCategories())
   }
 
   filterCat(event: any) {
@@ -78,8 +79,8 @@ export class ProductsComponent implements OnInit, OnDestroy {
       method: 'GET',
       url: url,
       success: (res: any) => {
-        this.products = res.products
-        this.totalProducts = this.products.length;
+        this.products.set(res.products)
+        this.totalProducts.update(() => this.products().length)
         this.pageIndex = 0;
         this.updatePaginatedProducts();
       },
@@ -87,12 +88,12 @@ export class ProductsComponent implements OnInit, OnDestroy {
     })
   }
   addToCart = (cart: ICart) => {
-    this.cart = this.cartService.AddToCartFn(cart)
+    this.cart.set(this.cartService.AddToCartFn(cart))
   }
   //pagination
   onPageChange(event: PageEvent) {
     this.pageEvent = event;
-    this.totalProducts = event.length;
+    this.totalProducts.update(() => event.length)
     this.pageSize = event.pageSize;
     this.pageIndex = event.pageIndex;
     this.updatePaginatedProducts();
@@ -101,7 +102,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   updatePaginatedProducts() {
     const startIndex = this.pageIndex * this.pageSize;
     const endIndex = startIndex + this.pageSize;
-    this.paginatedProducts = this.products.slice(startIndex, endIndex);
+    this.paginatedProducts.set(this.products().slice(startIndex, endIndex));
   }
   ngOnDestroy(): void {
     if (this.subscribe)

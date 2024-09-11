@@ -14,34 +14,33 @@ export class CartService {
   private toastService = inject(ToastrService);
   private authService = inject(AuthService);
   url!: string
+  private data!: { active: boolean, id: number }
   constructor(private http: HttpClient,
     @Inject(API_BASE_URL) public apiUrl: string) {
     this.url = apiUrl
+    this.data = this.isActiveUser();
   }
   addCart(model: any) {
     return this.http.post(this.url + '/carts/add', model)
   }
 
   SetCart = (cart: ICart[]) => {
-    const data = this.isActiveUser();
-    if (data.active) {
-      this.storage.Set(`cart_${data.id}`, cart);
+    if (this.data.active) {
+      this.storage.Set(`cart_${this.data.id}`, cart);
     }
   }
 
 
   GetCart = (): ICart[] => {
-    const data = this.isActiveUser()
-    if (data.active) {
-      const cart = this.storage.Get(`cart_${data.id}`) as ICart[]
+    if (this.data.active) {
+      const cart = this.storage.Get(`cart_${this.data.id}`) as ICart[]
       return cart;
     }
     return [] as ICart[];
   };
   DeleteCart = () => {
-    const data = this.isActiveUser();
-    if (data.active) {
-      this.storage.Delete(`cart_${data.id}`)
+    if (this.data.active) {
+      this.storage.Delete(`cart_${this.data.id}`)
     }
   };
 
@@ -58,8 +57,7 @@ export class CartService {
   }
 
   private PushInCartFn(_cart: ICart[], cart: ICart): ICart[] {
-    const data = this.isActiveUser()
-    if (data.active) {
+    if (this.data.active) {
       _cart.push(cart)
       this.SetCart(_cart)
       this.toastService.success($localize`Item Added To Cart Successfully.`, $localize`SUCCESS`)

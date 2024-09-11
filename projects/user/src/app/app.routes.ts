@@ -37,9 +37,7 @@ export const routes: Routes = [{
     [
       ...products,
       ...accounts,
-      {
-        path: 'home', component: HomeComponent
-      },
+      { path: 'home', component: HomeComponent },
       { path: '', component: HomeComponent, pathMatch: 'full' },
     ]
 },

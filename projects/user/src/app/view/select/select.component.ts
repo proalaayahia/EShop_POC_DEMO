@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, input } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { ICategory } from '../../models/category.model';
@@ -15,11 +15,12 @@ import { SharedModule } from '../../Shared/shared.module';
 export class SelectComponent {
   event: string = "all"
   @Input('isAll') isAllOption = true
-  @Input() data$!: Observable<ICategory[]>;
+ data$=input<Observable<ICategory[]>>()
   @Output() filterVal = new EventEmitter()
   constructor() { }
 
   filteration() {
     this.filterVal.emit(this.event)
+    console.log("from select",this.event)
   }
 }
