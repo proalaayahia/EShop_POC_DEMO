@@ -1,4 +1,4 @@
-import { Input, Component, Inject, PLATFORM_ID, inject } from '@angular/core'
+import { Input, Component, Inject, PLATFORM_ID, inject, input } from '@angular/core'
 import { isPlatformBrowser } from '@angular/common'
 import { SharedModule } from '../../Shared/shared.module'
 import { MaterialModule } from '../../Shared/material.module'
@@ -21,7 +21,7 @@ export class SidebarComponent {
   opened: boolean = false
   @Input('Shopping_Cart') cart: ICart[] = []
   @Input() isNav: boolean = false;
-  @Input() isLoggedIn: boolean = false;
+  isLoggedIn = input<boolean>(false);
   public isMobile: boolean = false;
   storage = inject(StorageService)
   router = inject(Router)
@@ -38,6 +38,9 @@ export class SidebarComponent {
       // Default value for SSR
       this.isMobile = false;
     }
+    // if(!this.isLoggedIn()){
+    //   this.logout()
+    // }
   }
   logout = () => {
     this.storage.Delete('token')

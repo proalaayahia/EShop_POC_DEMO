@@ -51,15 +51,15 @@
   <mat-sidenav-container class="sidebar-sidenav-container" [style.backgroundColor]="'#ecf0f3'"
     [style.marginTop.px]="isMobile ? 56 : 0">
     <mat-sidenav [class.position-fixed]="isNav" [style]="isNav?'top:60px':''" #snav mode="side"
-      [fixedInViewport]="isMobile" fixedTopGap="56" [opened]="opened">
-      <mat-nav-list>
+      [fixedInViewport]="isMobile" fixedTopGap="56">
+      <mat-nav-list (click)="snav.close()">
         <a *ngFor="let link of links" [routerLink]="link.route" mat-list-item>
           <mat-icon aria-hidden="false" mat-list-icon [fontIcon]="link.icon"></mat-icon> {{link.text.toUpperCase()}}
         </a>
       </mat-nav-list>
     </mat-sidenav>
 
-    <mat-sidenav-content class="router-container">
+    <mat-sidenav-content (click)="snav.close()" class="router-container">
       <router-outlet></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>
