@@ -1,24 +1,23 @@
 import { inject } from '@angular/core';
 import { CanMatchFn, Router } from '@angular/router';
 import { StorageService } from '../../services/storage.service';
-import { jwtDecode } from 'jwt-decode';
+import { AuthService } from '../../services/auth.service';
 
 export const AuthGuard: CanMatchFn = (route, segments) => {
   const storage = inject(StorageService)
+  const authService = inject(AuthService);
   const router = inject(Router)
   const path = segments.join('/')
-  const token = storage.Get('token');
-  if (!token) {
+  let isValid = authService.isValidSession();
+  if (!isValid) {
+    const token = storage.Get('token');
+    if (!token) {
+      storage.Delete('token');
+    }
+    
     router.navigateByUrl(`/account/login?redirect=${path}`)
+    // document.location.reload()
     return false;
-  }
-  const user = jwtDecode(token)
-  const date = new Date(user.exp! * 1000);
-  console.log('date', date)
-  console.log('new date', new Date())
-  if (new Date() > date) {
-    storage.Delete('token');
-    router.navigateByUrl(`/account/login?redirect=${path}`)
   }
   return true;
 };

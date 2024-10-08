@@ -14,16 +14,17 @@
       </button>
       <button i18n-matTooltip matTooltip="Your Cart" matTooltipClass="bg-dark" class="cart-notify" mat-icon-button
         routerLink="cart">
-        <mat-icon aria-hidden="false" [matBadge]="cart.length" [matBadgeHidden]="cart.length<=0"
-          [ngClass]="cart.length<=0?'text-secondary':'text-danger'" matBadgeColor="accent" fontIcon="shopping_cart">
+        <mat-icon aria-hidden="false" [matBadge]="cartLength" [matBadgeHidden]="cartLength<=0"
+          [ngClass]="cartLength<=0?'text-secondary':'text-danger'" matBadgeColor="accent" fontIcon="shopping_cart">
         </mat-icon>
       </button>
       <button i18n-matTooltip matTooltip="notifications" matTooltipClass="bg-dark" class="cart-notify" mat-icon-button>
-        <mat-icon aria-hidden="false" *ngIf="cart.length<=0" class="text-secondary" fontIcon="notifications" />
-        <mat-icon aria-hidden="false" *ngIf="cart.length>0" [matBadge]="cart.length" [matBadgeHidden]="cart.length<=0"
+        <mat-icon aria-hidden="false" *ngIf="cartLength<=0" class="text-secondary" fontIcon="notifications" />
+        <mat-icon aria-hidden="false" *ngIf="cartLength>0" [matBadge]="cartLength" [matBadgeHidden]="cartLength<=0"
           matBadgeColor="accent" class="text-info" fontIcon="notifications_active" />
       </button>
-      <button mat-icon-button [matMenuTriggerFor]="menu" class="nav-item dropdown text-warning">
+      <button mat-icon-button [matMenuTriggerFor]="menu" class="nav-item dropdown"
+        [ngClass]="isLoggedIn?'text-warning':'text-secondary'">
         <mat-icon aria-hidden="false" fontIcon="account_circle"></mat-icon>
       </button>
       <mat-menu #menu="matMenu">
@@ -51,15 +52,15 @@
   <mat-sidenav-container class="sidebar-sidenav-container" [style.backgroundColor]="'#ecf0f3'"
     [style.marginTop.px]="isMobile ? 56 : 0">
     <mat-sidenav [class.position-fixed]="isNav" [style]="isNav?'top:60px':''" #snav mode="side"
-      [fixedInViewport]="isMobile" fixedTopGap="56" [opened]="opened">
-      <mat-nav-list>
+      [fixedInViewport]="isMobile" fixedTopGap="56">
+      <mat-nav-list (click)="snav.close()">
         <a *ngFor="let link of links" [routerLink]="link.route" mat-list-item>
           <mat-icon aria-hidden="false" mat-list-icon [fontIcon]="link.icon"></mat-icon> {{link.text.toUpperCase()}}
         </a>
       </mat-nav-list>
     </mat-sidenav>
 
-    <mat-sidenav-content class="router-container">
+    <mat-sidenav-content (click)="snav.close()" class="router-container">
       <router-outlet></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>

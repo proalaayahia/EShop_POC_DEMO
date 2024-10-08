@@ -5,6 +5,7 @@ import { API_BASE_URL } from "../core/constants/api.const";
 import { StorageService } from "./storage.service";
 import { ToastrService } from "ngx-toastr";
 import { AuthService } from "./auth.service";
+import { BehaviorSubject } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -13,51 +14,57 @@ export class CartService {
   private storage = inject(StorageService);
   private toastService = inject(ToastrService);
   private authService = inject(AuthService);
-  url!: string
-  private data!: { active: boolean, id: number }
+  private url!: string
+  private data!: { isActive: boolean, id: number }
+  private cartCounter!: BehaviorSubject<number>;
   constructor(private http: HttpClient,
     @Inject(API_BASE_URL) public apiUrl: string) {
     this.url = apiUrl
-    this.data = this.isActiveUser();
+    this.data = this.userData();
+    this.cartCounter = new BehaviorSubject<number>(0);
   }
   addCart(model: any) {
     return this.http.post(this.url + '/carts/add', model)
   }
 
   SetCart = (cart: ICart[]) => {
-    if (this.data.active) {
+    if (this.data.isActive) {
       this.storage.Set(`cart_${this.data.id}`, cart);
+      this.cartCounter.next(cart.length)
     }
   }
 
 
   GetCart = (): ICart[] => {
-    if (this.data.active) {
+    if (this.data.isActive) {
       const cart = this.storage.Get(`cart_${this.data.id}`) as ICart[]
+      this.cartCounter.next(cart.length);
       return cart;
     }
+    this.cartCounter.next(0);
     return [] as ICart[];
   };
   DeleteCart = () => {
-    if (this.data.active) {
+    if (this.data.isActive) {
       this.storage.Delete(`cart_${this.data.id}`)
+      this.cartCounter.next(0);
     }
   };
 
   AddToCartFn(cart: ICart): ICart[] {
-    const _cart = this.GetCart() ?? [] as ICart[];
-    if (!!_cart && _cart.length > 0) {
-      const exists = _cart.find(item => { return item.product.id == cart.product.id })
+    const storageCart = this.GetCart() ?? [] as ICart[];
+    if (!!storageCart && storageCart.length > 0) {
+      const exists = storageCart.find(item => { return item.product.id == cart.product.id })
       if (exists) {
         this.toastService.error(cart.product.title, $localize`ERROR`)
-        return _cart;
+        return storageCart;
       }
     }
-    return this.PushInCartFn(_cart, cart)
+    return this.PushInCartFn(storageCart, cart)
   }
 
   private PushInCartFn(_cart: ICart[], cart: ICart): ICart[] {
-    if (this.data.active) {
+    if (this.data.isActive) {
       _cart.push(cart)
       this.SetCart(_cart)
       this.toastService.success($localize`Item Added To Cart Successfully.`, $localize`SUCCESS`)
@@ -67,8 +74,11 @@ export class CartService {
     }
     return _cart;
   }
-  isActiveUser = (): { active: boolean, id: number } => {
+  cartLength = (): BehaviorSubject<number> => {
+    return this.cartCounter;
+  }
+  private userData = (): { isActive: boolean, id: number } => {
     const userId = this.authService.GetCurrentUser();
-    return { active: userId > 0, id: userId };
+    return { isActive: userId > 0, id: userId };
   }
 }
