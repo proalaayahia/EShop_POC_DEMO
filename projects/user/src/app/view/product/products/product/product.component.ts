@@ -4,11 +4,12 @@ import { IProductModel } from '../../../../models/product.model';
 import { ICart } from '../../../../models/cart.model';
 import { SharedModule } from '../../../../Shared/shared.module';
 import { MaterialModule } from '../../../../Shared/material.module';
+import { HighlightProductDirective } from '../../../../core/directives/highlight-product.directive';
 
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [SharedModule, MaterialModule],
+  imports: [SharedModule, MaterialModule,HighlightProductDirective],
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css']
 })

@@ -1,10 +1,11 @@
-import { Input, Component, Inject, PLATFORM_ID, inject, input } from '@angular/core'
+import { Input, Component, Inject, PLATFORM_ID, inject, OnInit } from '@angular/core'
 import { isPlatformBrowser } from '@angular/common'
 import { SharedModule } from '../../Shared/shared.module'
 import { MaterialModule } from '../../Shared/material.module'
-import { ICart } from '../../models/cart.model'
 import { StorageService } from '../../services/storage.service'
 import { Router } from '@angular/router'
+import { AuthService } from '../../services/auth.service'
+import { CartService } from '../../services/cart.service'
 
 @Component({
   selector: 'app-sidebar',
@@ -16,20 +17,22 @@ import { Router } from '@angular/router'
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit{
   @Input() links: any[] = []
-  opened: boolean = false
-  @Input('Shopping_Cart') cart: ICart[] = []
   @Input() isNav: boolean = false;
-  isLoggedIn = input<boolean>(false);
+  opened: boolean = false
+  isLoggedIn!: boolean
+  cartLength: number = 0;
   public isMobile: boolean = false;
   storage = inject(StorageService)
   router = inject(Router)
+  authService = inject(AuthService);
+  cartService = inject(CartService);
+
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     if (isPlatformBrowser(this.platformId)) {
       const mobileQuery = window.matchMedia('(max-width: 600px)');
       this.isMobile = mobileQuery.matches;
-
       // Listen for changes in media query
       mobileQuery.addEventListener('change', (event) => {
         this.isMobile = event.matches;
@@ -38,12 +41,17 @@ export class SidebarComponent {
       // Default value for SSR
       this.isMobile = false;
     }
-    // if(!this.isLoggedIn()){
-    //   this.logout()
-    // }
+    this.authService.isLoggedIn().subscribe(value => {
+      this.isLoggedIn = value;
+    })
+    this.cartService.cartLength().subscribe(value => {
+      this.cartLength = value
+    })
+  }
+  ngOnInit(): void {
+      this.cartService.GetCart()
   }
   logout = () => {
-    this.storage.Delete('token')
-    document.location.reload()
+    this.authService.logout();
   }
 }

@@ -36,12 +36,12 @@ export class LoginComponent implements OnInit, OnDestroy {
   route = inject(ActivatedRoute);
   router = inject(Router)
   constructor(private fb: FormBuilder, private authService: AuthService) {
-    this.subscribtion = this.route.queryParamMap.subscribe((q) => {
-      this.redirect = q.get("redirect")!
-    });
   }
 
   ngOnInit(): void {
+    this.subscribtion = this.route.queryParamMap.subscribe((q) => {
+      this.redirect = q.get("redirect")!
+    });
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required]],
@@ -79,17 +79,14 @@ export class LoginComponent implements OnInit, OnDestroy {
       expiresInMins: this.isRemember?.value ? 60 : 30
     };
     this.subscribtion = this.authService.login(loginData).subscribe({
-      next: (result: TokenModel) => {
-        if (result) {
-          this.storage.Set('token', result.token)
-          if (this.redirect) {
-            const link = `/${this.redirect}`
-            this.router.navigate([link]).then(()=>{
-              location.reload()
-            })
-          } else {
-            this.router.navigate(['/home'])
-          }
+      next: (result) => {
+        if (this.redirect) {
+          const link = `/${this.redirect}`
+          this.router.navigate([link]).then(() => {
+            location.reload()
+          })
+        } else {
+          this.router.navigate(['/home'])
         }
       },
       error: (err) => {
@@ -103,16 +100,4 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.subscribtion.unsubscribe();
     }
   }
-}
-
-export interface TokenModel {
-  token: string,
-  refreshToken: string,
-  id: number,
-  username: string,
-  email: string,
-  firstName: string,
-  lastName: string,
-  gender: string,
-  image: string
 }

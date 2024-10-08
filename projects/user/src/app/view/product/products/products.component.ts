@@ -44,11 +44,12 @@ export class ProductsComponent implements OnInit, OnDestroy {
   pageEvent!: PageEvent;
 
   constructor(private service: ProductService) {
-    this.getAllProducts()
-    this.getAllCategories()
+    
   }
 
   ngOnInit(): void {
+    this.getAllProducts()
+    this.getAllCategories()
     this.totalProducts.set(this.products().length)
     this.updatePaginatedProducts();
   }
@@ -87,6 +88,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
       error: (err: any) => console.log(err)
     })
   }
+  
   addToCart = (cart: ICart) => {
     this.cart.set(this.cartService.AddToCartFn(cart))
   }
