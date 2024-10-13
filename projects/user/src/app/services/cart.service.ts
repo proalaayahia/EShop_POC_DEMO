@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { inject, Inject, Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { ICart } from "../models/cart.model";
 import { API_BASE_URL } from "../core/constants/api.const";
 import { StorageService } from "./storage.service";
@@ -11,13 +11,13 @@ import { BehaviorSubject } from "rxjs";
   providedIn: 'root'
 })
 export class CartService {
-  private storage = inject(StorageService);
-  private toastService = inject(ToastrService);
-  private authService = inject(AuthService);
   private url!: string
   private data!: { isActive: boolean, id: number }
   private cartCounter!: BehaviorSubject<number>;
-  constructor(private http: HttpClient,
+
+  constructor(private http: HttpClient, private storage: StorageService,
+    private authService: AuthService,
+    private toastService: ToastrService,
     @Inject(API_BASE_URL) public apiUrl: string) {
     this.url = apiUrl
     this.data = this.userData();

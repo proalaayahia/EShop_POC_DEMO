@@ -25,17 +25,17 @@ export class ProductCartComponent implements OnInit, OnDestroy {
   subscribe!: Subscription
 
   constructor(private toastr: ToastrService) {
-    this.cart.set(this.service.GetCart() ?? [] as ICart[])
-    this.sortedData.set(this.cart().slice())
   }
   ngOnInit(): void {
+    this.cart.set(this.service.GetCart() ?? [] as ICart[])
+    this.sortedData.set(this.cart().slice())
     this.getTotalCart()
   }
 
   plus(index: any) {
     this.cart()[index].quantity++
     this.getTotalCart()
-    if (this.cart.length > 0) {
+    if (this.cart().length > 0) {
       this.service.SetCart(this.cart());
     }
   }
@@ -45,7 +45,7 @@ export class ProductCartComponent implements OnInit, OnDestroy {
     if (cart.quantity <= 0)
       cart.quantity = 1
     this.getTotalCart()
-    if (this.cart.length > 0) {
+    if (this.cart().length > 0) {
       this.service.SetCart(this.cart());
     }
   }
