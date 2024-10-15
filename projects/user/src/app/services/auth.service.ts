@@ -10,6 +10,7 @@ import { TokenModel } from '../models/token.model';
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthService {
   private url!: string;
   private storage = inject(StorageService)

@@ -30,7 +30,9 @@ export class CartService {
   SetCart = (cart: ICart[]) => {
     if (this.data.isActive) {
       this.storage.Set(`cart_${this.data.id}`, cart);
-      this.cartCounter.next(cart.length)
+      if(cart!=null){
+        this.cartCounter.next(cart.length)
+      }
     }
   }
 
@@ -38,7 +40,9 @@ export class CartService {
   GetCart = (): ICart[] => {
     if (this.data.isActive) {
       const cart = this.storage.Get(`cart_${this.data.id}`) as ICart[]
-      this.cartCounter.next(cart.length);
+      if(cart!==null){
+        this.cartCounter.next(cart.length)
+      }
       return cart;
     }
     this.cartCounter.next(0);
